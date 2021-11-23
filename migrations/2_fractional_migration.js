@@ -1,20 +1,15 @@
 const Settings = artifacts.require("Settings");
 const InitializedProxy = artifacts.require("InitializedProxy");
-const ERC721TokenVault = artifacts.require("ERC721TokenVault");
+const TokenVault = artifacts.require("TokenVault");
 const ERC721VaultFactory = artifacts.require("ERC721VaultFactory");
 
 
 module.exports = function (deployer) {
   deployer.deploy(Settings).then( async () => {
     let settingsInstance = await Settings.deployed();
-    deployer.deploy(ERC721TokenVault, settingsInstance);
+    deployer.deploy(TokenVault, settingsInstance);
+    deployer.deploy(ERC721VaultFactory, settingsInstance);
+
+    //deployer.deploy(InitializedProxy);
   });
-};
-
-
-
-module.exports = function (deployer) {
-  //deployer.deploy(InitializedProxy, settingsInstance);
-  //deployer.deploy(ERC721TokenVault, settingsInstance);
-  //deployer.deploy(ERC721VaultFactory, settingsInstance);
 };
