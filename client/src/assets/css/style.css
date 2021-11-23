@@ -1,0 +1,205 @@
+@font-face {
+  font-family: "TTCommons";
+  src: local("TTCommons"),
+    url(./../fonts/TTCommons-Medium.ttf) format("truetype");
+}
+
+@font-face {
+  font-family: "TTCommons-light";
+  src: local("TTCommons-light"),
+    url(./../fonts/TTCommons-Light.ttf) format("truetype");
+}
+
+@font-face {
+  font-family: "TTCommons-DemiBold";
+  src: local("TTCommons-DemiBold"),
+    url(./../fonts/TTCommons-DemiBold.ttf) format("truetype");
+}
+
+body,
+html {
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+  width: 100%;
+  background-color: #ffffff;
+  font-family: TTCommons, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans",
+    "Helvetica Neue", sans-serif;
+  font-size: 1.07em
+}
+
+* {
+  box-sizing: border-box;
+}
+
+main {
+  padding-left: 12em;
+  padding-right: 12em;
+}
+
+.shadowize {
+  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.1);
+  -moz-box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.1);
+  -webkit-box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.1);
+}
+
+.row {
+  width: 100%;
+}
+
+.board {
+  border-radius: 15px;
+  height: 350px;
+  width: 350px;
+  float: right;
+}
+
+.icon {
+  width: 20px;
+  height: 20px;
+  margin-right: 0.3em;
+}
+
+.flex-container {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.ms-black {
+  color: #1f2023;
+}
+
+.ms-light-green {
+  color: #c8f0c5;
+}
+
+.ms-faint-green {
+  color: #76d86e;
+}
+
+.ms-green {
+  color: #1bbf0d;
+}
+
+.ms-green-bg {
+  background-color: #1bbf0d;
+}
+
+.ms-brown {
+  color: #6e6e6e;
+}
+
+.ms-brown-bg {
+  background-color: #6e6e6e;
+}
+
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+a {
+  display: block;
+  text-align: center;
+  /* padding: 14px 16px; */
+  text-decoration: none;
+  color: #1f2023;
+}
+
+li {
+  float: left;
+}
+
+button {
+  border: 0;
+  outline: none;
+}
+
+input {
+  border: 0;
+  outline: none;
+}
+
+.wt-icon img {
+  width: 0.8em;
+  height: 0.8em;
+}
+
+.ms-btn {
+  border-radius: 10px;
+  padding-left: 15px;
+  padding-right: 15px;
+  box-shadow: 0 2px 4px 0 rgba(27, 191, 13, 0.3);;
+  -moz-box-shadow: 0 2px 4px 0 rgba(27, 191, 13, 0.3);;
+  -webkit-box-shadow: 0 2px 4px 0 rgba(27, 191, 13, 0.3);;
+}
+
+.ms-btn:hover {
+  cursor: pointer;
+}
+
+.ms-btn:hover {
+  transform: translateY(-1px);
+  transition: 0.4s ease-in-out;
+}
+
+/* li a:hover:not(.active) {
+  background-color: #111;
+}
+
+.active {
+  background-color: #4CAF50;
+} */
+
+h3 {
+  color: #1f2023;
+  font-weight: lighter;
+  font-family: TTCommons-DemiBold;
+}
+
+h4 {
+  color: #1f2023;
+  font-weight: lighter;
+  font-size: 1.1em;
+}
+
+p {
+  line-height: 1.3em;
+  color: #747476;
+}
+
+/* 
+============================Connect To Metamask Page========================
+*/
+
+.connect {
+  background-color: #cccccc;
+  height: 100vh;
+  width: 100%;
+}
+
+.send header ul,
+.connect header ul,
+.connect header button {
+  visibility: hidden;
+}
+
+/* 
+============================Connect To Metamask Page========================
+*/
+.send {
+  background-color: #f5f8f9;
+  height: 100vh;
+  width: 100%;
+  padding-left: 20%;
+  padding-right: 20%;
+}
+
+.hidden {
+  display: none !important;
+}
+
+@import "./mobile.css";
