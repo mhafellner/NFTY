@@ -1,0 +1,53 @@
+.top-bar {
+    width: 100%;
+    align-items: center;
+    padding-top: 15px;
+}
+
+.top-bar > a > img {
+    width: 8em;
+    height: 2em;
+}
+
+.top-bar > ul li {
+    padding: 20px;
+}
+
+.top-bar > ul li > a {
+    color: #747476;
+    font-weight: 500;
+    font-size: 18px;
+}
+.top-bar .testnet{
+    background: none;
+    border: 1.5px solid #f90404;
+    box-shadow: none;
+    color: #000;
+    cursor: initial
+}
+.top-bar .livenet{
+    background: none;
+    border: 1.5px solid #1bbf0d;
+    box-shadow: none;
+    color: #000;
+    cursor: initial
+}
+
+.top-bar > ul {
+    margin: 0 auto;
+    font-size: 1.1em;
+}
+
+.top-bar > button {
+    height: 38px;
+    color: white;
+    width: 104px;
+    font-size: 17px;
+    justify-content: center;
+    align-content: center;
+}
+
+.beta-icon {
+    width: 30px !important;
+    margin-left: 5px;
+}
