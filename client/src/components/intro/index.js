@@ -22,31 +22,16 @@ export default withContext(({ ctx }) => (
         from the NFTs to the holders of the tokens representing
         ownership in the NFT vault.
       </p>
-      {
-        ctx.auth ? (
-          <Button to="/send" customStyle="ms-btn wt-icon ms-green-bg">
-            START SENDING <span className="send-arrow">↗</span>
-          </Button>
-        ) : (
-          <Button to="/connect" customStyle="ms-btn wt-icon ms-green-bg">
-            START SENDING <span className="send-arrow">↗</span>
-          </Button>
-        )
-      }
+
+      <Button to="/vault" customStyle="ms-btn wt-icon ms-green-bg">
+        Go to Vault <span className="send-arrow">↗</span>
+      </Button>
+
     </div>
     <div>
       <img src={imgs.miniMultisend} alt="mini-multisend" />
     </div>
     <div>
-      <h4>Contact us through email</h4>
-      <div>
-        <div>
-          <input placeholder="Email address... " />
-          <button className="ms-btn wt-icon ms-green-bg">
-            <img src={icons.rightArrow} alt="icon" />
-          </button>
-        </div>
-      </div>
     </div>
     <RightBars />
     <LeftBars />

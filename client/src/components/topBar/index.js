@@ -1,6 +1,5 @@
 import React from 'react';
 import "./index.css";
-// import imgs from './../../assets/imgs/index';
 import Button from "..//ButtonWithRouter";
 import { withContext } from './../../provider/index';
 
@@ -40,16 +39,6 @@ export default withContext(({ ctx, beta }) => {
           <a href="#help">FAQ</a>
         </li>
       </ul>
-
-      {
-        ctx.network === "" ? (
-          <Button to="connect" customStyle="ms-btn wt-icon ms-green-bg">
-            SEND <span className="send-arrow">↗</span>
-          </Button>
-        ) :
-          show()
-      }
-
     </header>
   );
 }
