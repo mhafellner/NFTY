@@ -7,23 +7,30 @@ import "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC721/utils/ERC721HolderUpgradeable.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 
-
-contract NFTYVault is ERC20Upgradeable, ERC721HolderUpgradeable, ReentrancyGuard {
-
+contract NFTYVault is
+    ERC20Upgradeable,
+    ERC721HolderUpgradeable,
+    ReentrancyGuard
+{
     address public constant weth = 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2;
+
+    // TODO: Make it an array of NFTs (ERC721 tokens and IDs)
     address public token;
-    address public curator;
     uint256 public id;
+
+    address public royaltyToken;
+
+    address public curator;
     uint256 public reservePrice;
     bool public vaultClosed;
 
     /// @notice Event emitted when new curator address is appointed
     event Curator(address indexed curator);
-    
+
     /// @notice Event emitted when curator raises the reserve price
     event ReservePrice(uint256 price);
 
-    /// @notice Event emitted when NFT is bought out at reserve price 
+    /// @notice Event emitted when NFT is bought out at reserve price
     event Buyout(address indexed buyer);
 
     /// @notice Event emitted when NFT is redeemed in exchange for burning total supply
@@ -32,27 +39,35 @@ contract NFTYVault is ERC20Upgradeable, ERC721HolderUpgradeable, ReentrancyGuard
     /// @notice Event emitted when a token holder burns tokens in exchange for ETH in contract
     event Cashout(address indexed redeemer, uint256 share);
 
-
-    modifier onlyCurator {
+    modifier onlyCurator() {
         require(msg.sender == curator);
         _;
     }
 
-    function initialize(address _curator, address _token, uint256 _id, uint256 _supply, uint256 _reservePrice, string memory _name, string memory _symbol) external initializer {
-        
+    function initialize(
+        address _curator,
+        address _token,
+        address _royaltyToken,
+        uint256 _id,
+        uint256 _supply,
+        uint256 _reservePrice,
+        string memory _name,
+        string memory _symbol
+    ) external initializer {
         __ERC20_init(_name, _symbol);
         __ERC721Holder_init();
 
         token = _token;
         id = _id;
 
+        royaltyToken = _royaltyToken;
+
         curator = _curator;
 
         reservePrice = _reservePrice;
         vaultClosed = false;
-        
-        _mint(_curator, _supply);
 
+        _mint(_curator, _supply);
     }
 
     /// ---------------------------------------------------
@@ -81,42 +96,63 @@ contract NFTYVault is ERC20Upgradeable, ERC721HolderUpgradeable, ReentrancyGuard
     /// ---------- VAULT CLOSING FUNCTIONS ------------
     /// -----------------------------------------------
 
-    /// @notice an external function allowing anyone to pay the reserve price and receive the NFTs
+    /// an external function allowing anyone to pay the reserve price and receive the NFTs
     function buyout() external payable {
         require(msg.value >= reservePrice, "Payment below reserve price");
         require(vaultClosed == false, "Vault not active anymore");
 
         // transfer erc721 to reserve price payer
-        IERC721(token).transferFrom(address(this), msg.sender, id); 
+        IERC721(token).transferFrom(address(this), msg.sender, id);
 
         vaultClosed = true;
 
-        emit Buyout(msg.sender);   
+        emit Buyout(msg.sender);
     }
 
-    /// @notice an external function allowing anyone to redeem the NFT in exchange for burning total token supply
+    /// an external function allowing anyone to redeem the NFT in exchange for burning total token supply
     function redeem() external {
         _burn(msg.sender, totalSupply());
 
         // transfer erc721 to redeemer
-        IERC721(token).transferFrom(address(this), msg.sender, id);    
+        IERC721(token).transferFrom(address(this), msg.sender, id);
 
         vaultClosed = true;
 
         emit Redeem(msg.sender);
     }
 
-    /// @notice an external function to burn ERC20 tokens to receive ETH from ERC721 token purchase
+    /// an external function to burn ERC20 tokens to receive ETH from ERC721 token purchase
     function cashout() external nonReentrant {
         uint256 bal = balanceOf(msg.sender);
         require(bal > 0, "cash:no tokens to cash out");
-        uint256 share = bal * address(this).balance / totalSupply();
+        uint256 share = (bal * address(this).balance) / totalSupply();
         _burn(msg.sender, bal);
 
         _sendETHOrWETH(payable(msg.sender), share);
 
         emit Cashout(msg.sender, share);
     }
+
+    /// -----------------------------------------------
+    /// ------- ROYALTY DISTRIBUTION FUNCTIONS --------
+    /// -----------------------------------------------
+
+    function upkeepNeeded() public view returns (bool) {
+        if (vaultClosed) {
+            return false;
+        }
+        // TODO: Check if royalty token > 0 or a cartain amount
+
+        return true;
+    }
+
+    function claimRoyalties() external {}
+
+    /**
+     * distributes royalty tokens to the vault token holders relative
+     * to their share.
+     */
+    function distributeRoyalties() public {}
 
     /// -----------------------------------------------
     /// ------------- INTERNAL FUNCTIONS --------------
@@ -149,5 +185,4 @@ contract NFTYVault is ERC20Upgradeable, ERC721HolderUpgradeable, ReentrancyGuard
         (bool success, ) = to.call{value: value, gas: 30000}("");
         return success;
     }
-
 }
