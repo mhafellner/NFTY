@@ -6,10 +6,6 @@ import ethApi from './../../utils/contractCall/index';
 import { withContext } from './../../provider/index';
 import Modal from 'react-modal';
 
-// const openImportModal = () => {
-//   const { ctx } = this.props;
-//   ctx.handleChange("modalName", "gsheet");
-// };
 
 // export default withContext(({ ctx }) => (
 //   <div className="flex-container shadowize board connect-metamask-board">
@@ -63,10 +59,6 @@ class connectMetamask extends Component {
     this.setState({ secondModalIsOpen: false });
   };
 
-  // openImportModal = () => {
-  //   const { ctx } = this.props;
-  //   ctx.handleChange("modalName", "gsheet");
-  // };
 
   render() {
     const { ctx } = this.props;
@@ -74,7 +66,7 @@ class connectMetamask extends Component {
       <div className="flex-container shadowize board connect-metamask-board">
         <img src={imgs.metamask} alt="metamask-logo" />
         <div>
-          <h2>Connect to MultiSend</h2>
+          <h2>Connect to NFTY</h2>
           <p>Connect & sign transaction via browser extension</p>
         </div>
         <div>

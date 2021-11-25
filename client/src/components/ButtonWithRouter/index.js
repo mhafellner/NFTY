@@ -6,12 +6,12 @@ const Button = props => {
   const { to, history, btnText, handleClick, customStyle } = props;
   return (
     <button
-    className={customStyle}
+      className={customStyle}
       onClick={async e => {
         e.preventDefault();
         if (handleClick) {
           const resolved = await handleClick()
-          if(resolved && to){
+          if (resolved && to) {
             return history.push(to);
           };
         } else {
@@ -25,5 +25,6 @@ const Button = props => {
 };
 
 export default withRouter(({ history, to, btnText, ...rest }) => (
-  <Button history={history} to={to} btnText={btnText} {...rest} />
+  < Button history={history} to={to} btnText={btnText} {...rest} />
 ));
+console.log()
