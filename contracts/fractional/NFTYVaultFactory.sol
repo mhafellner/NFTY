@@ -9,17 +9,23 @@ import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "@chainlink/contracts/src/v0.8/interfaces/KeeperCompatibleInterface.sol";
 
 import "./InitializedProxy.sol";
+import "./NFTYSettings.sol";
 import "./NFTYVault.sol";
 
-contract ERC721VaultFactory is Ownable, Pausable, KeeperCompatibleInterface {
+contract NFTYVaultFactory is Ownable, Pausable, KeeperCompatibleInterface {
+    /// @notice the number of ERC721 vaults
     uint256 public vaultCount;
+
+    /// @notice the mapping of vault number to vault contract
     mapping(uint256 => address) public vaults;
 
-    /// the NFTYVault logic contract
+    /// @notice a settings contract controlled by governance
+    address public immutable settings;
+    /// @notice the NFTYVault logic contract
     address public immutable logic;
 
-    /// the intervall royalties are payed out
-    uint256 public immutable interval;
+    uint256 public interval;
+
     uint256 public lastTimeStamp;
 
     event Mint(
@@ -30,8 +36,9 @@ contract ERC721VaultFactory is Ownable, Pausable, KeeperCompatibleInterface {
         uint256 vaultId
     );
 
-    constructor() {
-        logic = address(new NFTYVault());
+    constructor(address _settings) {
+        settings = _settings;
+        logic = address(new NFTYVault(_settings));
         interval = 1 weeks;
         lastTimeStamp = block.timestamp;
     }
@@ -135,8 +142,4 @@ contract ERC721VaultFactory is Ownable, Pausable, KeeperCompatibleInterface {
             }
         }
     }
-
-    /// -----------------------------------------------
-    /// ------------- INTERNAL FUNCTIONS --------------
-    /// -----------------------------------------------
 }

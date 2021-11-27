@@ -14,6 +14,8 @@ contract NFTYVault is
 {
     address public constant weth = 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2;
 
+    address public settings;
+
     // TODO: Make it an array of NFTs (ERC721 tokens and IDs)
     address public token;
     uint256 public id;
@@ -60,6 +62,10 @@ contract NFTYVault is
     modifier onlyCurator() {
         require(msg.sender == curator);
         _;
+    }
+
+    constructor(address _settings) {
+        settings = _settings;
     }
 
     function initialize(
