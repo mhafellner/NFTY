@@ -105,7 +105,7 @@ contract ERC721VaultFactory is Ownable, Pausable, KeeperCompatibleInterface {
             bytes1 pos = 0x01;
 
             for (uint256 i = 0; i < vaultCount; i++) {
-                if (NFTYVault(vaults[i]).upkeepNeeded()) {
+                if (NFTYVault(vaults[i]).snapshotNeeded()) {
                     data |= pos;
                 }
 
@@ -129,7 +129,7 @@ contract ERC721VaultFactory is Ownable, Pausable, KeeperCompatibleInterface {
             bytes1 pos = 0x01;
             for (uint256 j = 0; j < 8; j++) {
                 if (data & pos == pos) {
-                    NFTYVault(vaults[i]).distributeRoyalties();
+                    NFTYVault(vaults[i]).createSnapshot();
                 }
                 pos = pos << 1;
             }

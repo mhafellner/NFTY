@@ -18,25 +18,43 @@ contract NFTYVault is
     address public token;
     uint256 public id;
 
-    address public royaltyToken;
-
     address public curator;
+
     uint256 public reservePrice;
+
     bool public vaultClosed;
 
-    /// @notice Event emitted when new curator address is appointed
+    /// the royalty Token that is payed out to NFT holders
+    address public royaltyToken; // make it ERC777 ??
+
+    /// the snapshot IDs that are needed to distribute Royalties
+    uint256[] public snapshotId;
+
+    /// the total number of snapshots taken
+    uint256 public snapshotCount;
+
+    /// the number of royalty token at the last snapshot
+    uint256 private lastTotalRoyaltyCount;
+
+    /// the amount of royalty tokens earned in the period
+    mapping(uint256 => uint256) public royaltiesSnapshot;
+
+    /// the last time an address has claimed royalties
+    mapping(address => uint256) public royaltiesClaimedAddress;
+
+    /// Event emitted when new curator address is appointed
     event Curator(address indexed curator);
 
-    /// @notice Event emitted when curator raises the reserve price
+    /// Event emitted when curator raises the reserve price
     event ReservePrice(uint256 price);
 
-    /// @notice Event emitted when NFT is bought out at reserve price
+    /// Event emitted when NFT is bought out at reserve price
     event Buyout(address indexed buyer);
 
-    /// @notice Event emitted when NFT is redeemed in exchange for burning total supply
+    /// Event emitted when NFT is redeemed in exchange for burning total supply
     event Redeem(address indexed redeemer);
 
-    /// @notice Event emitted when a token holder burns tokens in exchange for ETH in contract
+    /// Event emitted when a token holder burns tokens in exchange for ETH in contract
     event Cashout(address indexed redeemer, uint256 share);
 
     modifier onlyCurator() {
@@ -137,7 +155,7 @@ contract NFTYVault is
     /// ------- ROYALTY DISTRIBUTION FUNCTIONS --------
     /// -----------------------------------------------
 
-    function upkeepNeeded() public view returns (bool) {
+    function snapshotNeeded() public view returns (bool) {
         if (vaultClosed) {
             return false;
         }
@@ -146,6 +164,11 @@ contract NFTYVault is
         return true;
     }
 
+    function createSnapshot() external {}
+
+    function hasRoyaltiesToClaim(address caller) public view {}
+
+    /// call claimRoyalties from Factory?
     function claimRoyalties() external {}
 
     /**
