@@ -15,6 +15,7 @@ contract NFTYVault is ERC20Upgradeable, ERC721HolderUpgradeable, ReentrancyGuard
     address public curator;
     uint256 public id;
     uint256 public reservePrice;
+    address public settings;
     bool public vaultClosed;
 
     /// @notice Event emitted when new curator address is appointed
@@ -37,6 +38,11 @@ contract NFTYVault is ERC20Upgradeable, ERC721HolderUpgradeable, ReentrancyGuard
         require(msg.sender == curator);
         _;
     }
+
+
+    constructor(address _settings) {
+        settings = _settings;
+    }    
 
     function initialize(address _curator, address _token, uint256 _id, uint256 _supply, uint256 _reservePrice, string memory _name, string memory _symbol) external initializer {
         

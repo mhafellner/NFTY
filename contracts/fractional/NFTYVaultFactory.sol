@@ -8,9 +8,9 @@ import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 
 import "./InitializedProxy.sol";
 import "./Settings.sol";
-import "./ERC721TokenVault.sol";
+import "./NFTYVault.sol";
 
-contract ERC721VaultFactory is Ownable, Pausable{
+contract NFTYVaultFactory is Ownable, Pausable{
   /// @notice the number of ERC721 vaults
   uint256 public vaultCount;
 
@@ -19,14 +19,14 @@ contract ERC721VaultFactory is Ownable, Pausable{
 
   /// @notice a settings contract controlled by governance
   address public immutable settings;
-  /// @notice the TokenVault logic contract
+  /// @notice the NFTYVault logic contract
   address public immutable logic;
 
   event Mint(address indexed token, uint256 id, uint256 price, address vault, uint256 vaultId);
 
   constructor(address _settings) {
     settings = _settings;
-    logic = address(new TokenVault(_settings));
+    logic = address(new NFTYVault(_settings));
   }
 
   /// @notice the function to mint a new vault
