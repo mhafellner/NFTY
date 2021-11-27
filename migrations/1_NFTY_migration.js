@@ -1,5 +1,4 @@
 const Settings = artifacts.require("NFTYSettings");
-const ERC721VaultFactory = artifacts.require("ERC721VaultFactory");
 const NFTYVaultFactory = artifacts.require("NFTYVaultFactory");
 
 
