@@ -1,5 +1,5 @@
 //SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.9;
 
 import "./interfaces/IWETH.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
@@ -30,22 +30,22 @@ contract NFTYVault is
     /// the royalty Token that is payed out to NFT holders
     address public royaltyToken; // make it ERC777 ??
 
-    /// index to the snapshot IDs that are needed to distribute Royalties
+    // index to the snapshot IDs that are needed to distribute Royalties
     mapping(uint256 => uint256) private snapshotIds;
 
     /// the total number of snapshots taken
     uint256 public snapshotCount;
 
-    /// the number of royalty token at the last snapshot
+    // the number of royalty token at the last snapshot
     uint256 private lastRoyaltyBalance;
 
-    /// the number of royalty tokens claimed since the last snapshot
+    // the number of royalty tokens claimed since the last snapshot
     uint256 private claimedRoyaltiesPeriod;
 
     /// the snapshot id to the amount of royalty tokens earned in the snapshot period
     mapping(uint256 => uint256) public royaltySnapshotAt;
 
-    /// the last time an address has claimed royalties
+    // the last time an address has claimed royalties
     mapping(address => uint256) private nextRoyaltiesClaimableAt;
 
     /// Event emitted when new curator address is appointed
