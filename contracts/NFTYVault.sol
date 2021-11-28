@@ -1,14 +1,15 @@
 //SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import "./Interfaces/IWETH.sol";
+import "./interfaces/IWETH.sol";
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
-import "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC20/extensions/ERC20SnapshotUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC721/utils/ERC721HolderUpgradeable.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 
 contract NFTYVault is
-    ERC20Upgradeable,
+    ERC20SnapshotUpgradeable,
     ERC721HolderUpgradeable,
     ReentrancyGuard
 {
@@ -29,20 +30,23 @@ contract NFTYVault is
     /// the royalty Token that is payed out to NFT holders
     address public royaltyToken; // make it ERC777 ??
 
-    /// the snapshot IDs that are needed to distribute Royalties
-    uint256[] public snapshotId;
+    /// index to the snapshot IDs that are needed to distribute Royalties
+    mapping(uint256 => uint256) private snapshotIds;
 
     /// the total number of snapshots taken
     uint256 public snapshotCount;
 
     /// the number of royalty token at the last snapshot
-    uint256 private lastTotalRoyaltyCount;
+    uint256 private lastRoyaltyBalance;
 
-    /// the amount of royalty tokens earned in the period
-    mapping(uint256 => uint256) public royaltiesSnapshot;
+    /// the number of royalty tokens claimed since the last snapshot
+    uint256 private claimedRoyaltiesPeriod;
+
+    /// the snapshot id to the amount of royalty tokens earned in the snapshot period
+    mapping(uint256 => uint256) public royaltySnapshotAt;
 
     /// the last time an address has claimed royalties
-    mapping(address => uint256) public royaltiesClaimedAddress;
+    mapping(address => uint256) private nextRoyaltiesClaimableAt;
 
     /// Event emitted when new curator address is appointed
     event Curator(address indexed curator);
@@ -162,26 +166,86 @@ contract NFTYVault is
     /// -----------------------------------------------
 
     function snapshotNeeded() public view returns (bool) {
-        if (vaultClosed) {
+        if (vaultClosed || newRoyaltiesPeriod() == 0) {
             return false;
         }
-        // TODO: Check if royalty token > 0 or a cartain amount
 
         return true;
     }
 
-    function createSnapshot() external {}
+    function createSnapshot() external {
+        uint256 sId = _snapshot();
+        snapshotIds[snapshotCount] = sId;
 
-    function hasRoyaltiesToClaim(address caller) public view {}
+        royaltySnapshotAt[sId] = newRoyaltiesPeriod();
+        lastRoyaltyBalance = getRoyaltyBalanceofContract();
+        claimedRoyaltiesPeriod = 0;
 
-    /// call claimRoyalties from Factory?
-    function claimRoyalties() external {}
+        snapshotCount++;
+    }
 
-    /**
-     * distributes royalty tokens to the vault token holders relative
-     * to their share.
-     */
-    function distributeRoyalties() public {}
+    function newRoyaltiesPeriod() public view returns (uint256) {
+        return
+            getRoyaltyBalanceofContract() +
+            claimedRoyaltiesPeriod -
+            lastRoyaltyBalance;
+    }
+
+    function getRoyaltyBalanceofContract() public view returns (uint256) {
+        return IERC20(royaltyToken).balanceOf(address(this));
+    }
+
+    function getAccountBalanceAtSnapshot(address account, uint256 index)
+        public
+        view
+        returns (uint256)
+    {
+        return balanceOfAt(account, snapshotIds[index]);
+    }
+
+    function getTotalSupplyAtSnapshot(uint256 index)
+        public
+        view
+        returns (uint256)
+    {
+        return totalSupplyAt(snapshotIds[index]);
+    }
+
+    function royaltiesClaimableOf(address account)
+        public
+        view
+        returns (uint256 totalRoyalties, uint256[] memory royaltiesPeriod)
+    {
+        totalRoyalties = 0;
+        royaltiesPeriod = new uint256[](snapshotCount);
+        for (
+            uint256 i = nextRoyaltiesClaimableAt[account];
+            i < snapshotCount;
+            i++
+        ) {
+            uint256 balanceAt = balanceOfAt(account, snapshotIds[i]);
+            uint256 totalAt = totalSupplyAt(snapshotIds[i]);
+
+            uint256 precision = 1e18;
+            // percentage of the total supply with a precision of 18
+            uint256 vaultPercentage = (balanceAt * precision) / totalAt;
+            // share of royalties in the period with a precision of 18
+            royaltiesPeriod[i] =
+                (vaultPercentage * royaltySnapshotAt[snapshotIds[i]]) /
+                precision;
+            totalRoyalties += royaltiesPeriod[i];
+        }
+    }
+
+    function claimRoyalties() external {
+        (uint256 royalties, ) = royaltiesClaimableOf(msg.sender);
+        require(royalties > 0, "Nothing to claim!");
+
+        nextRoyaltiesClaimableAt[msg.sender] = snapshotCount;
+        claimedRoyaltiesPeriod += royalties;
+
+        IERC20(royaltyToken).transfer(msg.sender, royalties);
+    }
 
     /// -----------------------------------------------
     /// ------------- INTERNAL FUNCTIONS --------------
