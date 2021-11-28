@@ -19,9 +19,15 @@
  */
 
 // const HDWalletProvider = require('@truffle/hdwallet-provider');
+// const infuraKey = "fj4jll3k.....";
 //
 // const fs = require('fs');
 // const mnemonic = fs.readFileSync(".secret").toString().trim();
+
+const HDWalletProvider = require("@truffle/hdwallet-provider");
+require("dotenv").config();
+const GAS_LIMIT = 8e6;
+
 
 module.exports = {
   /**
@@ -41,11 +47,11 @@ module.exports = {
     // tab if you use this network and you must also set the `host`, `port` and `network_id`
     // options below to some value.
     //
-    development: {
-      host: "127.0.0.1",     // Localhost (default: none)
-      port: 8545,            // Standard Ethereum port (default: none)
-      network_id: "*",       // Any network (default: none)
-    },
+    // development: {
+    //  host: "127.0.0.1",     // Localhost (default: none)
+    //  port: 8545,            // Standard Ethereum port (default: none)
+    //  network_id: "*",       // Any network (default: none)
+    // },
     // Another network with more advanced options...
     // advanced: {
     // port: 8777,             // Custom port
@@ -53,7 +59,7 @@ module.exports = {
     // gas: 8500000,           // Gas sent with each transaction (default: ~6700000)
     // gasPrice: 20000000000,  // 20 gwei (in wei) (default: 100 gwei)
     // from: <address>,        // Account to send txs from (default: accounts[0])
-    // websocket: true        // Enable EventEmitter interface for web3 (default: false)
+    // websockets: true        // Enable EventEmitter interface for web3 (default: false)
     // },
     // Useful for deploying to a public network.
     // NB: It's important to wrap the provider as a function.
@@ -71,6 +77,39 @@ module.exports = {
     // network_id: 2111,   // This network is yours, in the cloud.
     // production: true    // Treats this network as if it was a public net. (default: false)
     // }
+
+    goerli: {
+        provider: () => new HDWalletProvider(
+            process.env.MNEMONIC,
+            process.env.GOERLI_PROVIDER_URL,
+        ),
+        network_id: 5, // Goerli's id
+        gas: GAS_LIMIT,
+        gasPrice: 10e9, // 10 GWEI
+        //confirmations: 6, // # of confs to wait between deployments. (default: 0)
+        timeoutBlocks: 500, // # of blocks before a deployment times out  (minimum/default: 50)
+        skipDryRun: false // Skip dry run before migrations? (default: false for public nets )
+    },
+
+    kovan: {
+      provider: () => new HDWalletProvider(
+          process.env.MNEMONIC,
+          process.env.KOVAN_PROVIDER_URL,
+      ),
+      network_id: 42, // Goerli's id
+      gas: GAS_LIMIT,
+      gasPrice: 10e9, // 10 GWEI
+      //confirmations: 6, // # of confs to wait between deployments. (default: 0)
+      timeoutBlocks: 500, // # of blocks before a deployment times out  (minimum/default: 50)
+      skipDryRun: false // Skip dry run before migrations? (default: false for public nets )
+  },
+
+    ganache: {
+        host: "127.0.0.1",
+        network_id: "*",
+        port: process.env.GANACHE_PORT || 8545,
+    },
+
   },
 
   // Set default mocha options here, use special reporters etc.
@@ -90,27 +129,15 @@ module.exports = {
       //  },
       //  evmVersion: "byzantium"
       // }
-    }
+    },
   },
 
-  // Truffle DB is currently disabled by default; to enable it, change enabled:
-  // false to enabled: true. The default storage location can also be
-  // overridden by specifying the adapter settings, as shown in the commented code below.
-  //
-  // NOTE: It is not possible to migrate your contracts to truffle DB and you should
-  // make a backup of your artifacts to a safe location before enabling this feature.
-  //
-  // After you backed up your artifacts you can utilize db by running migrate as follows: 
-  // $ truffle migrate --reset --compile-all
-  //
-  // db: {
-    // enabled: false,
-    // host: "127.0.0.1",
-    // adapter: {
-    //   name: "sqlite",
-    //   settings: {
-    //     directory: ".db"
-    //   }
-    // }
-  // }
+  plugins: [
+    'truffle-plugin-verify'
+  ],
+
+  api_keys: {
+    etherscan: process.env.ETHERSCAN_API_KEY
+  }
+  
 };
