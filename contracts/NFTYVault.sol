@@ -17,14 +17,19 @@ contract NFTYVault is
 
     address public settings;
 
-    // TODO: Make it an array of NFTs (ERC721 tokens and IDs)
+    /// the NFT (ERC721 token) that earns the royalties
     address public token;
+
+    /// the if of the NFT (ERC721 token) that earns the royalties
     uint256 public id;
 
+    /// the curator of the NFTY token vault
     address public curator;
 
+    /// the set value of NFTY token vault
     uint256 public reservePrice;
 
+    /// the value that shows if vault is still active or closed
     bool public vaultClosed;
 
     /// the royalty Token that is payed out to NFT holders
@@ -63,13 +68,12 @@ contract NFTYVault is
     /// Event emitted when a token holder burns tokens in exchange for ETH in contract
     event Cashout(address indexed redeemer, uint256 share);
 
+    /// Event emitted when a token holder claims his royalty share
+    event ClaimRoyalty(address indexed redeemer, uint256 amount);
+
     modifier onlyCurator() {
         require(msg.sender == curator);
         _;
-    }
-
-    constructor(address _settings) {
-        settings = _settings;
     }
 
     function initialize(
@@ -195,29 +199,12 @@ contract NFTYVault is
         return IERC20(royaltyToken).balanceOf(address(this));
     }
 
-    function getAccountBalanceAtSnapshot(address account, uint256 index)
-        public
-        view
-        returns (uint256)
-    {
-        return balanceOfAt(account, snapshotIds[index]);
-    }
-
-    function getTotalSupplyAtSnapshot(uint256 index)
-        public
-        view
-        returns (uint256)
-    {
-        return totalSupplyAt(snapshotIds[index]);
-    }
-
     function royaltiesClaimableOf(address account)
         public
         view
-        returns (uint256 totalRoyalties, uint256[] memory royaltiesPeriod)
+        returns (uint256 totalRoyalties)
     {
         totalRoyalties = 0;
-        royaltiesPeriod = new uint256[](snapshotCount);
         for (
             uint256 i = nextRoyaltiesClaimableAt[account];
             i < snapshotCount;
@@ -230,21 +217,22 @@ contract NFTYVault is
             // percentage of the total supply with a precision of 18
             uint256 vaultPercentage = (balanceAt * precision) / totalAt;
             // share of royalties in the period with a precision of 18
-            royaltiesPeriod[i] =
+            totalRoyalties =
                 (vaultPercentage * royaltySnapshotAt[snapshotIds[i]]) /
                 precision;
-            totalRoyalties += royaltiesPeriod[i];
         }
     }
 
     function claimRoyalties() external {
-        (uint256 royalties, ) = royaltiesClaimableOf(msg.sender);
+        uint256 royalties = royaltiesClaimableOf(msg.sender);
         require(royalties > 0, "Nothing to claim!");
 
         nextRoyaltiesClaimableAt[msg.sender] = snapshotCount;
         claimedRoyaltiesPeriod += royalties;
 
         IERC20(royaltyToken).transfer(msg.sender, royalties);
+
+        emit ClaimRoyalty(msg.sender, royalties);
     }
 
     /// -----------------------------------------------

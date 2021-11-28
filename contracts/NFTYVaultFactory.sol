@@ -13,20 +13,19 @@ import "./NFTYSettings.sol";
 import "./NFTYVault.sol";
 
 contract NFTYVaultFactory is Ownable, Pausable, KeeperCompatibleInterface {
-    /// @notice the number of ERC721 vaults
+    /// the number of ERC721 vaults
     uint256 public vaultCount;
 
-    /// @notice the mapping of vault number to vault contract
+    /// the mapping of vault number to vault contract
     mapping(uint256 => address) public vaults;
 
-    /// @notice a settings contract controlled by governance
-    address public immutable settings;
-    /// @notice the NFTYVault logic contract
+    /// the NFTYVault logic contract
     address public immutable logic;
 
+    /// the interval length of the snapshot execution
     uint256 public interval;
 
-    uint256 public lastTimeStamp;
+    uint256 private lastTimeStamp;
 
     event Mint(
         address indexed token,
@@ -36,9 +35,8 @@ contract NFTYVaultFactory is Ownable, Pausable, KeeperCompatibleInterface {
         uint256 vaultId
     );
 
-    constructor(address _settings) {
-        settings = _settings;
-        logic = address(new NFTYVault(_settings));
+    constructor() {
+        logic = address(new NFTYVault());
         interval = 1 weeks;
         lastTimeStamp = block.timestamp;
     }
@@ -107,6 +105,7 @@ contract NFTYVaultFactory is Ownable, Pausable, KeeperCompatibleInterface {
     {
         upkeepNeeded = (block.timestamp - lastTimeStamp) > interval;
 
+        // create bitmap in perform data -> bit 1 for upkeep needed
         if (upkeepNeeded) {
             bytes1 data = 0x00;
             bytes1 pos = 0x01;
