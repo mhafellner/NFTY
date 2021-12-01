@@ -1,7 +1,5 @@
 import React from "react";
 import "./index.css";
-import icons from "./../../assets/icons/index";
-import imgs from './../../assets/imgs/index';
 import { RightBars, LeftBars } from './bars';
 import Button from '../ButtonWithRouter';
 import { withContext } from "./../../provider/index";
@@ -29,7 +27,6 @@ export default withContext(({ ctx }) => (
 
     </div>
     <div>
-      <img src={imgs.miniMultisend} alt="mini-multisend" />
     </div>
     <div>
     </div>

@@ -105,8 +105,7 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function",
-      "constant": true
+      "type": "function"
     },
     {
       "inputs": [],
@@ -119,8 +118,7 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function",
-      "constant": true
+      "type": "function"
     },
     {
       "inputs": [],
@@ -133,8 +131,7 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function",
-      "constant": true
+      "type": "function"
     },
     {
       "inputs": [],
@@ -154,8 +151,7 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function",
-      "constant": true
+      "type": "function"
     },
     {
       "inputs": [
@@ -181,8 +177,7 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function",
-      "constant": true
+      "type": "function"
     },
     {
       "inputs": [
@@ -201,8 +196,7 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function",
-      "constant": true
+      "type": "function"
     },
     {
       "inputs": [
@@ -8580,7 +8574,7 @@
         1029
       ],
       "Settings": [
-        4505
+        4503
       ],
       "Strings": [
         2543
@@ -8659,7 +8653,7 @@
         "nameLocation": "-1:-1:-1",
         "nodeType": "ImportDirective",
         "scope": 3967,
-        "sourceUnit": 4506,
+        "sourceUnit": 4504,
         "src": "259:24:20",
         "symbolAliases": [],
         "unitAlias": ""
@@ -10625,7 +10619,7 @@
         1029
       ],
       "Settings": [
-        4505
+        4503
       ],
       "Strings": [
         2543
@@ -10704,7 +10698,7 @@
         "nameLocation": "-1:-1:-1",
         "nodeType": "ImportDirective",
         "scope": 3967,
-        "sourceUnit": 4506,
+        "sourceUnit": 4504,
         "src": "259:24:20",
         "symbolAliases": [],
         "unitAlias": ""
@@ -12609,8 +12603,7 @@
   },
   "networks": {},
   "schemaVersion": "3.4.3",
-  "updatedAt": "2021-11-27T10:57:26.805Z",
-  "networkType": "ethereum",
+  "updatedAt": "2021-11-27T10:52:52.714Z",
   "devdoc": {
     "kind": "dev",
     "methods": {

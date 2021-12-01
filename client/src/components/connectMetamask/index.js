@@ -7,36 +7,6 @@ import { withContext } from './../../provider/index';
 import Modal from 'react-modal';
 
 
-// export default withContext(({ ctx }) => (
-//   <div className="flex-container shadowize board connect-metamask-board">
-//     <img src={imgs.metamask} alt="metamask-logo" />
-//     <div>
-//       <h2>Connect to MultiSend</h2>
-//       <p>Connect & sign transaction via browser extension</p>
-//     </div>
-//     <div>
-//       <Button
-//         to="/send"
-//         handleClick={async () => {
-//           const res = await ethApi.enableMetamask();
-//           if (res){
-//             ctx.handleChange("auth", true);
-//             ctx.handleChange("metamaskAddress", res);
-//             return res;
-//           }else{
-//             // return ({this.openImportModal})
-//           }
-
-//           }
-//         }
-//         customStyle="ms-btn"
-//       >
-//         Connect
-//       </Button>
-//     </div>
-//   </div>
-// ));
-
 class connectMetamask extends Component {
   state = {
     modalIsOpen: false,
