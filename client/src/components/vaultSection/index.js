@@ -17,7 +17,6 @@ export default () => (
             <Button to="/connect" customStyle="ms-btn wt-icon ms-green-bg">
                 connect wallet <span className="send-arrow">↗</span>
             </Button>
-
         </div>
     </main>
 );
