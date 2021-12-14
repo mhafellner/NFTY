@@ -2,9 +2,9 @@
 pragma solidity ^0.8.9;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "./Interfaces/ISettings.sol";
+import "./interfaces/ISettingsNFTY.sol";
 
-contract Settings is Ownable, ISettings {
+contract NFTYSettings is Ownable, ISettingsNFTY {
     /// @notice the maximum auction length
     uint256 public override maxAuctionLength;
 
