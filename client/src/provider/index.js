@@ -39,7 +39,7 @@ export default class Provider extends React.Component {
         });
       },
 
-      closeModal: () =>{
+      closeModal: () => {
         return this.setState(state => {
           state.ctx.modalName = ""
           return state
