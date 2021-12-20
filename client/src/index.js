@@ -6,8 +6,6 @@ import NFTY from "./App";
 
 
 ReactDOM.render(
-
   <NFTY />,
-
   document.getElementById("root")
 );
